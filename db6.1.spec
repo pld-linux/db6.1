@@ -1,3 +1,6 @@
+# WARNING:
+# - 6.1.29->6.1.36 changes __db_env ABI (adds convert in the middle of public handle list in struct)
+# - contains changes similar to 6.2.32, which is not compatible with rpm 5.4.17
 #
 # Conditional build:
 %bcond_without	java		# don't build Java bindings
@@ -11,7 +14,7 @@
 
 %define		major		6
 %define		libver		%{major}.1
-%define		ver		%{libver}.29
+%define		ver		%{libver}.36
 %define		patchlevel	0
 Summary:	Berkeley DB database library for C
 Summary(pl.UTF-8):	Biblioteka C do obsługi baz Berkeley DB
@@ -22,9 +25,8 @@ License:	AGPL v3
 Group:		Libraries
 #Source0Download: http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index-082944.html
 Source0:	http://download.oracle.com/berkeley-db/db-%{ver}.tar.gz
-# Source0-md5:	7f4d47302dfec698fe088e5285c9098e
+# Source0-md5:	7504e31df4e3bef7a984913070733262
 Patch0:		%{name}-sql-features.patch
-Patch1:		%{name}-jbj13.patch
 URL:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
 BuildRequires:	automake
 %if %{with java}
@@ -371,7 +373,6 @@ poleceń.
 %prep
 %setup -q -n db-%{ver}
 %patch0 -p1
-%patch1 -p1
 
 %build
 cp -f /usr/share/automake/config.sub dist
