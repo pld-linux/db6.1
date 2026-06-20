@@ -7,8 +7,6 @@
 %bcond_with	default_db	# use this db as default system db [Th uses DB 5.3]
 %bcond_with	rpm_db		# install library to rootfs for /bin/rpm
 
-%{load:/usr/lib/rpm/macros.d/java}
-
 %define		major		6
 %define		libver		%{major}.1
 %define		ver		%{libver}.29
@@ -391,7 +389,8 @@ CXXFLAGS="%{rpmcflags} -fno-implicit-templates"
 LDFLAGS="%{rpmcflags} %{rpmldflags}"
 export CC CXX CFLAGS CXXFLAGS LDFLAGS
 
-../dist/%configure \
+%define	configuredir ../dist
+%configure \
 	--disable-shared \
 	--enable-static \
 	--enable-compat185 \
@@ -409,7 +408,8 @@ cd ..
 
 cd build_unix
 
-../dist/%configure \
+%define	configuredir ../dist
+%configure \
 	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
 	--enable-shared \
