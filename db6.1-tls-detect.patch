@@ -1,0 +1,27 @@
+The C++ TLS probe uses NULL without including a header. g++ no longer
+declares it implicitly, so the probe failed to compile, TLS was detected
+as "none" and dbstl refused to build. Patch the generated configure too,
+as the build does not regenerate it.
+
+--- db-6.1.38/dist/aclocal/tls.m4.orig	2019-04-15 00:00:00.000000000 +0200
++++ db-6.1.38/dist/aclocal/tls.m4	2019-04-15 00:00:00.000000000 +0200
+@@ -15,7 +15,8 @@
+       for ax_tls_defn_keyword in $ax_tls_keywords ""; do
+           test -z "$ax_tls_decl_keyword" &&
+               test -z "$ax_tls_defn_keyword" && continue
+-          AC_TRY_COMPILE([template <typename T>class TLSClass {
++          AC_TRY_COMPILE([#include <stddef.h>
++              template <typename T>class TLSClass {
+               public: static ] $ax_tls_decl_keyword [ T *tlsvar;
+               };
+               class TLSClass2 {
+--- db-6.1.38/dist/configure.orig	2019-04-15 00:00:00.000000000 +0200
++++ db-6.1.38/dist/configure	2019-04-15 00:00:00.000000000 +0200
+@@ -19280,6 +19280,7 @@
+               test -z "$ax_tls_defn_keyword" && continue
+           cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
++#include <stddef.h>
+ template <typename T>class TLSClass {
+               public: static  $ax_tls_decl_keyword  T *tlsvar;
+               };
